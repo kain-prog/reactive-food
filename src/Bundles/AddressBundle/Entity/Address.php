@@ -3,6 +3,7 @@
 namespace App\Bundles\AddressBundle\Entity;
 
 use App\Bundles\AddressBundle\Repository\AddressRepository;
+use App\Bundles\CustomerBundle\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -41,6 +42,10 @@ class Address
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $info = null;
 
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'addresses')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Customer $customer = null;
+
     #[ORM\Column(type: 'datetime')]
     private \DateTime $created_at;
 
@@ -57,11 +62,9 @@ class Address
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getPostalCode(): string
@@ -69,11 +72,9 @@ class Address
         return $this->postalCode;
     }
 
-    public function setPostalCode(string $postalCode): self
+    public function setPostalCode(string $postalCode): void
     {
         $this->postalCode = $postalCode;
-
-        return $this;
     }
 
     public function getStreet(): string
@@ -81,11 +82,9 @@ class Address
         return $this->street;
     }
 
-    public function setStreet(string $street): self
+    public function setStreet(string $street): void
     {
         $this->street = $street;
-
-        return $this;
     }
 
     public function getCity(): string
@@ -93,11 +92,9 @@ class Address
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(string $city): void
     {
         $this->city = $city;
-
-        return $this;
     }
 
     public function getDistrict(): string
@@ -105,11 +102,9 @@ class Address
         return $this->district;
     }
 
-    public function setDistrict(string $district): self
+    public function setDistrict(string $district): void
     {
         $this->district = $district;
-
-        return $this;
     }
 
     public function getComplement(): ?string
@@ -117,11 +112,9 @@ class Address
         return $this->complement;
     }
 
-    public function setComplement(string $complement): self
+    public function setComplement(string $complement): void
     {
         $this->complement = $complement;
-
-        return $this;
     }
 
     public function getNumber(): ?string
@@ -129,11 +122,9 @@ class Address
         return $this->number;
     }
 
-    public function setNumber(string $number): self
+    public function setNumber(string $number): void
     {
         $this->number = $number;
-
-        return $this;
     }
 
     public function getInfo(): ?string
@@ -141,11 +132,9 @@ class Address
         return $this->info;
     }
 
-    public function setInfo(string $info): self
+    public function setInfo(string $info): void
     {
         $this->info = $info;
-
-        return $this;
     }
 
     public function getCreatedAt(): \DateTime
@@ -169,5 +158,10 @@ class Address
     public function onPreUpdate(): void
     {
         $this->updated_at = new \DateTime("now");
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

@@ -8,3 +8,4 @@
 <pre> php bin/console importmap:install</pre>
 <pre> php bin/console importmap:require @hotwired/turbo</pre>
 <pre> php bin/console make:stimulus-controller hello</pre>
+<pre> php bin/console make:stimulus-controller hello</pre>

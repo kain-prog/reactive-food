@@ -3,6 +3,7 @@
 namespace App\Bundles\CardBundle\Entity;
 
 use App\Bundles\CardBundle\Repository\CardRepository;
+use App\Bundles\CustomerBundle\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -17,29 +18,21 @@ class Card
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: 'string', length: 10, nullable: false)]
-    private string $postalCode;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $street;
+    private string $number;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $city;
+    private string $valid_thru;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $district;
+    private string $cvv;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $complement = null;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $number = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $info = null;
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'cards')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Customer $customer = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTime $created_at;
@@ -52,100 +45,54 @@ class Card
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getPostalCode(): string
-    {
-        return $this->postalCode;
-    }
-
-    public function setPostalCode(string $postalCode): self
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    public function getStreet(): string
-    {
-        return $this->street;
-    }
-
-    public function setStreet(string $street): self
-    {
-        $this->street = $street;
-
-        return $this;
-    }
-
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getDistrict(): string
-    {
-        return $this->district;
-    }
-
-    public function setDistrict(string $district): self
-    {
-        $this->district = $district;
-
-        return $this;
-    }
-
-    public function getComplement(): ?string
-    {
-        return $this->complement;
-    }
-
-    public function setComplement(string $complement): self
-    {
-        $this->complement = $complement;
-
-        return $this;
-    }
-
-    public function getNumber(): ?string
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    public function setNumber(string $number): self
+    public function setNumber(string $number): void
     {
         $this->number = $number;
-
-        return $this;
     }
 
-    public function getInfo(): ?string
+    public function getValidThru(): string
     {
-        return $this->info;
+        return $this->valid_thru;
     }
 
-    public function setInfo(string $info): self
+    public function setValidThru(string $valid_thru): void
     {
-        $this->info = $info;
+        $this->valid_thru = $valid_thru;
+    }
 
-        return $this;
+    public function getCvv(): string
+    {
+        return $this->cvv;
+    }
+
+    public function setCvv(string $cvv): void
+    {
+        $this->cvv = $cvv;
+    }
+
+    public function getCustomer(): Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(Customer $customer): void
+    {
+        $this->customer = $customer;
     }
 
     public function getCreatedAt(): \DateTime
@@ -169,5 +116,10 @@ class Card
     public function onPreUpdate(): void
     {
         $this->updated_at = new \DateTime("now");
+    }
+
+    public function __toString(): string
+    {
+        return substr($this->number, -4);
     }
 }
